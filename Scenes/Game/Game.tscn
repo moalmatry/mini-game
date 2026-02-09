@@ -2,22 +2,48 @@
 
 [ext_resource type="Texture2D" uid="uid://hpk8wlgovx83" path="res://Assets/GemBg.png" id="1_rdw05"]
 [ext_resource type="Script" uid="uid://c60jaa21egdvu" path="res://Scenes/Game/Game.gd" id="1_xbxml"]
-[ext_resource type="PackedScene" uid="uid://65mx062n3tkj" path="res://Scenes/Dice/Dice.tscn" id="2_gwu2e"]
+[ext_resource type="PackedScene" uid="uid://c1fio3sisdnfo" path="res://Scenes/Fox/Fox.tscn" id="3_xbxml"]
+[ext_resource type="FontFile" uid="uid://55h5bmkus88m" path="res://Assets/LuckiestGuy-Regular.ttf" id="4_ln2h6"]
+[ext_resource type="AudioStream" uid="uid://35cetnrqcv24" path="res://Assets/tetris.mp3" id="5_y3kpf"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_y3kpf"]
+font = ExtResource("4_ln2h6")
+font_size = 40
+outline_size = 5
+outline_color = Color(0.11764706, 0.11764706, 0.11764706, 1)
 
 [node name="Game" type="Node2D" unique_id=1848240984]
+process_mode = 3
 script = ExtResource("1_xbxml")
 
 [node name="GemBg" type="Sprite2D" parent="." unique_id=1330338423]
-scale = Vector2(0.615, 0.61)
+position = Vector2(-58, -49.000004)
+scale = Vector2(0.67031246, 0.71111107)
 texture = ExtResource("1_rdw05")
 centered = false
 
-[node name="Dice" parent="." unique_id=558347382 instance=ExtResource("2_gwu2e")]
-position = Vector2(230, 106)
+[node name="ScoreLabel" type="Label" parent="." unique_id=2025968564]
+offset_left = 30.0
+offset_top = 19.0
+offset_right = 131.0
+offset_bottom = 60.0
+text = "Score"
+label_settings = SubResource("LabelSettings_y3kpf")
 
-[node name="Dice2" parent="." unique_id=288911181 instance=ExtResource("2_gwu2e")]
-position = Vector2(71, 41)
+[node name="Music" type="AudioStreamPlayer" parent="." unique_id=1927774102]
+stream = ExtResource("5_y3kpf")
+volume_db = -7.754
+autoplay = true
 
-[connection signal="game_over" from="Dice" to="." method="_on_dice_game_over"]
-[connection signal="game_over" from="Dice" to="Dice" method="_on_game_over"]
-[connection signal="game_over" from="Dice2" to="." method="_on_dice_game_over"]
+[node name="Pausable" type="Node" parent="." unique_id=1368546296]
+
+[node name="Fox" parent="Pausable" unique_id=1909597843 instance=ExtResource("3_xbxml")]
+z_index = 1
+position = Vector2(612, 572)
+
+[node name="SpawnTimer" type="Timer" parent="Pausable" unique_id=1826143836]
+wait_time = 2.0
+autostart = true
+
+[connection signal="point_scored" from="Pausable/Fox" to="." method="_on_fox_point_scored"]
+[connection signal="timeout" from="Pausable/SpawnTimer" to="." method="_on_spawn_timer_timeout"]
